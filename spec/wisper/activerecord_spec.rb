@@ -1,9 +1,9 @@
 describe 'ActiveRecord' do
   let(:listener)    { double('Listener') }
-  let(:model_class) { Class.new(Meeting) { include Wisper.model } }
+  let(:model_class) { Class.new(ExampleEngine::Comment) { include Wisper.model } }
 
   before { Wisper::GlobalListeners.clear }
-  before { allow(model_class).to receive(:name).and_return('Meeting') }
+  before { allow(model_class).to receive(:name).and_return('ExampleEngine::Comment') }
 
   it '.model returns ActiveRecord module' do
     expect(Wisper.model).to eq Wisper::ActiveRecord::Publisher
@@ -13,7 +13,7 @@ describe 'ActiveRecord' do
     describe 'when creating' do
       context 'and model is valid' do
         it 'publishes create_<model_name>_successful event to listener' do
-          expect(listener).to receive(:create_meeting_successful).with(instance_of(model_class))
+          expect(listener).to receive(:create_example_engine_comment_successful).with(instance_of(model_class))
           model_class.subscribe(listener)
           model_class.commit
         end
@@ -21,7 +21,7 @@ describe 'ActiveRecord' do
 
       context 'and model is not valid' do
         it 'publishes create_<model_name>_failed event to listener' do
-          expect(listener).to receive(:create_meeting_failed).with(instance_of(model_class))
+          expect(listener).to receive(:create_example_engine_comment_failed).with(instance_of(model_class))
           model_class.subscribe(listener)
           model_class.commit(title: nil)
         end
@@ -35,7 +35,7 @@ describe 'ActiveRecord' do
 
       context 'and model is valid' do
         it 'publishes update_<model_name>_successful event to listener' do
-          expect(listener).to receive(:update_meeting_successful).with(instance_of(model_class))
+          expect(listener).to receive(:update_example_engine_comment_successful).with(instance_of(model_class))
           model_class.subscribe(listener)
           model.commit(title: 'foo')
         end
@@ -43,7 +43,7 @@ describe 'ActiveRecord' do
 
       context 'and model is not valid' do
         it 'publishes update_<model_name>_failed event to listener' do
-          expect(listener).to receive(:update_meeting_failed).with(instance_of(model_class))
+          expect(listener).to receive(:update_example_engine_comment_failed).with(instance_of(model_class))
           model_class.subscribe(listener)
           model.commit(title: nil)
         end
@@ -94,7 +94,7 @@ describe 'ActiveRecord' do
     end
 
     it 'publishes a <model_name>_committed event to listener' do
-      expect(listener).to receive(:meeting_committed).with(instance_of(model_class))
+      expect(listener).to receive(:example_engine_comment_committed).with(instance_of(model_class))
     end
   end
 
